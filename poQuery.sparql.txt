@@ -1,0 +1,40 @@
+LOAD <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+INTO GRAPH <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+
+CLEAR GRAPH <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+
+PREFIX : <http://example.org>
+
+SELECT *
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+   ?p a :Pokemon, :Legendary;
+      :hp ?hp;
+      :defense ?def.
+   FILTER( ?hp > 100 && ?def > 100)
+}
+
+PREFIX : <http://example.org>
+
+SELECT *
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+   ?p a :Pokemon;
+      :hp ?hp; :against_bug ?abug; :against_dark ?adark ; :against_dragon ?adragon; :against_electric ?aelec;
+	 :against_fairy ?afary; :against_fight ?afight; :against_fire ?afire; :against_flying ?afly;
+	 :against_ghost ?aghost;
+	 :against_grass ?agrass;
+	 :against_ground ?aground;
+	 :against_ice ?aice;
+	 :against_normal ?anormal;
+	 :against_poison ?apoison;
+	 :against_psychic ?apsychic;
+	 :against_rock ?arock;
+	 :against_steel ?asteel;
+	 :against_water ?awater.
+   FILTER( ?hp > 100 && ?abug <= 1 && ?adark <= 1 && ?adragon <= 1 &&  
+            ?aelec <= 1 && ?afary <= 1 && ?afight <= 1 && ?afire <= 1 && ?afly <= 1 &&
+            ?aghost <= 1 && ?agrass <= 1 && ?aground <= 1 && ?aice <= 1 && 
+            ?anormal <= 1 && ?apoison <= 1 && ?apsychic <= 1 && ?arock <= 1 &&
+            ?asteel <= 1 && ?awater <= 1)
+}
