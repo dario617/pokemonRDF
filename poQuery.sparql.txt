@@ -178,3 +178,45 @@ WHERE{
     }
 }
 ORDER BY ?gen
+
+# max speed
+
+PREFIX : <http://example.org/>
+
+SELECT ?p, ?hp, ?attack, ?gen, ?def, ?maxSpeed
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+    ?p a :Pokemon;
+        :attack ?attack;
+        :hp ?hp;
+        :generation ?gen;
+        :defense ?def;
+        :speed ?maxSpeed
+    {
+        SELECT ?gen, MAX(?speed) AS ?maxSpeed
+        WHERE{
+            ?p a :Pokemon;
+                :speed ?speed;
+                :generation ?gen.
+        }
+    }
+}
+ORDER BY ?gen
+
+# different generations evoltuion
+
+
+PREFIX : <http://example.org/>
+
+SELECT ?p1, ?gen1, ?p2, ?gen2
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+    ?p1 a :Pokemon;
+        :generation ?gen1.
+    ?p2 a :Pokemon;
+        :generation ?gen2.
+
+    ?p1 :evolvesInto ?p2.
+    FILTER(?gen1 != ?gen2)
+}
+ORDER BY ?gen1 ?gen2
