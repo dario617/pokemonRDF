@@ -68,16 +68,16 @@ ORDER BY ?gen
 
 PREFIX : <http://example.org/>
 
-SELECT ?p, ?hp, ?def, ?gen, ?maxAttack 
+SELECT ?p, ?hp, ?def, ?gen, ?minAttack 
 FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
 WHERE{
-    ?p a :Pokemon;
-        :attack ?maxAttack;
+    ?p a :Pokemon, :Legendary;
+        :attack ?minAttack;
         :hp ?hp;
         :generation ?gen;
         :defense ?def.
     {
-        SELECT ?gen, MAX(?attack) AS ?maxAttack
+        SELECT ?gen, MIN(?attack) AS ?minAttack
         WHERE{
             ?p a :Pokemon, :Legendary;
                 :attack ?attack;
@@ -100,10 +100,10 @@ WHERE{
         :generation ?gen;
         :defense ?maxDefense.
     {
-        SELECT ?gen, MAX(?defense) AS ?maxDefense
+        SELECT ?gen, MAX(?def) AS ?maxDefense
         WHERE{
-            ?p a :Pokemon, :Legendary;
-                :defense ?defense;
+            ?p a :Pokemon;
+                :defense ?def;
                 :generation ?gen.
         }
     }
@@ -112,6 +112,69 @@ ORDER BY ?gen
 
 # Higher Attack
 
+PREFIX : <http://example.org/>
+
+SELECT ?p, ?hp, ?def, ?gen, ?maxAttack 
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+    ?p a :Pokemon;
+        :attack ?maxAttack;
+        :hp ?hp;
+        :generation ?gen;
+        :defense ?def.
+    {
+        SELECT ?gen, MAX(?attack) AS ?maxAttack
+        WHERE{
+            ?p a :Pokemon;
+                :attack ?attack;
+                :generation ?gen.
+        }
+    }
+}
+ORDER BY ?gen
+
 # Higher Special Defense
 
+PREFIX : <http://example.org/>
+
+SELECT ?p, ?hp, ?attack, ?gen, ?maxspDefense 
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+    ?p a :Pokemon;
+        :sp_attack ?attack;
+        :hp ?hp;
+        :generation ?gen;
+        :sp_defense ?maxspDefense.
+    {
+        SELECT ?gen, MAX(?def) AS ?maxspDefense
+        WHERE{
+            ?p a :Pokemon;
+                :sp_defense ?def;
+                :generation ?gen.
+        }
+    }
+}
+ORDER BY ?gen
+
 # Higher Special Attack
+
+PREFIX : <http://example.org/>
+
+SELECT ?p, ?hp, ?def, ?gen, ?maxspAttack
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+    ?p a :Pokemon;
+        :sp_attack ?maxspAttack;
+        :hp ?hp;
+        :generation ?gen;
+        :sp_defense ?def.
+    {
+        SELECT ?gen, MAX(?att) AS ?maxspAttack
+        WHERE{
+            ?p a :Pokemon;
+                :sp_attack ?att;
+                :generation ?gen.
+        }
+    }
+}
+ORDER BY ?gen
