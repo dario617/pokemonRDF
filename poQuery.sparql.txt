@@ -3,7 +3,7 @@ INTO GRAPH <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
 
 CLEAR GRAPH <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
 
-PREFIX : <http://example.org>
+PREFIX : <http://example.org/>
 
 SELECT *
 FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
@@ -14,7 +14,7 @@ WHERE{
    FILTER( ?hp > 100 && ?def > 100)
 }
 
-PREFIX : <http://example.org>
+PREFIX : <http://example.org/>
 
 SELECT *
 FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
@@ -38,3 +38,80 @@ WHERE{
             ?anormal <= 1 && ?apoison <= 1 && ?apsychic <= 1 && ?arock <= 1 &&
             ?asteel <= 1 && ?awater <= 1)
 }
+
+# Not legendary Pokemons with the higher Attack stat
+
+PREFIX : <http://example.org/>
+
+SELECT ?p, ?hp, ?def, ?gen, ?maxAttack 
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+    ?p a :Pokemon;
+        :attack ?maxAttack;
+        :hp ?hp;
+        :generation ?gen;
+        :defense ?def.
+    {
+        SELECT ?gen, MAX(?attack) AS ?maxAttack
+        WHERE{
+            ?p a :Pokemon;
+                :attack ?attack;
+                :generation ?gen.
+            FILTER NOT EXISTS{ ?p a :Legendary }
+        }
+    }
+    FILTER NOT EXISTS{ ?p a :Legendary }
+}
+ORDER BY ?gen
+
+# Worst legendary pokemons
+
+PREFIX : <http://example.org/>
+
+SELECT ?p, ?hp, ?def, ?gen, ?maxAttack 
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+    ?p a :Pokemon;
+        :attack ?maxAttack;
+        :hp ?hp;
+        :generation ?gen;
+        :defense ?def.
+    {
+        SELECT ?gen, MAX(?attack) AS ?maxAttack
+        WHERE{
+            ?p a :Pokemon, :Legendary;
+                :attack ?attack;
+                :generation ?gen.
+        }
+    }
+}
+ORDER BY ?gen
+
+# Higher defense
+
+PREFIX : <http://example.org/>
+
+SELECT ?p, ?hp, ?attack, ?gen, ?maxDefense 
+FROM <http://users.dcc.uchile.cl/~dpalma/pokeParsed.ttl>
+WHERE{
+    ?p a :Pokemon;
+        :attack ?attack;
+        :hp ?hp;
+        :generation ?gen;
+        :defense ?maxDefense.
+    {
+        SELECT ?gen, MAX(?defense) AS ?maxDefense
+        WHERE{
+            ?p a :Pokemon, :Legendary;
+                :defense ?defense;
+                :generation ?gen.
+        }
+    }
+}
+ORDER BY ?gen
+
+# Higher Attack
+
+# Higher Special Defense
+
+# Higher Special Attack
